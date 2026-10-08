@@ -18,6 +18,9 @@ connectdb()
 
 const server = express()
 
+//read data
+server.use(express.json())
+
 server.use("/api/products",router)
 
 //routing
