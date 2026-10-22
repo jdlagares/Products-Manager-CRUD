@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 
 import Product from "../models/Product.model"
+import { error } from "console"
 
 export const getProducts = async (req: Request, res: Response) => {
     try {
@@ -16,7 +17,21 @@ export const getProducts = async (req: Request, res: Response) => {
         console.log(err)
     }
 }
+export const getProductById = async (req: Request<{ id: string }>, res: Response) => {
+    try {
 
+        const{id}=req.params 
+        const product=await Product.findByPk(id)
+
+        if(!product){
+            return res.status(404).json({ error:"product not found"})
+        }
+        res.json({data:product})
+
+    } catch (err) {
+        console.log(err)
+    }
+}
 export const createProduct = async (req: Request, res: Response) => {
 
     //save product to data base
@@ -29,4 +44,45 @@ export const createProduct = async (req: Request, res: Response) => {
     } catch (err) {
         console.log(err)
     }
+}
+export const updatedProduct = async (req: Request<{ id: string }>, res: Response)=>{
+    const{id}=req.params 
+    const product=await Product.findByPk(id)
+
+    if(!product){
+        return res.status(404).json({ error:"product not found"})
+    }
+
+    await product.update(req.body)
+    await product.save()
+
+
+
+    res.json({data:product})
+}
+export const updateAvailability = async (req: Request<{ id: string }>, res: Response)=>{
+    const{id}=req.params 
+    const product=await Product.findByPk(id)
+
+    if(!product){
+        return res.status(404).json({ error:"product not found"})
+    }
+    
+    product.availability = !product.dataValues.availability
+    await product.save()
+
+
+
+    res.json({data:product})
+}
+export const deleteProduct = async (req: Request<{ id: string }>, res: Response)=>{
+    const{id}=req.params 
+    const product=await Product.findByPk(id)
+
+    if(!product){
+        return res.status(404).json({ error:"product not found"})
+    }
+    
+   await product.destroy()
+   res.json({data: "producto eliminado"})
 }

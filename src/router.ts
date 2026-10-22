@@ -1,10 +1,15 @@
 import { Router} from "express"
-import { createProduct, getProducts } from "./handlers/product"
-import {body} from "express-validator"
+import { createProduct, getProducts ,getProductById, updatedProduct, updateAvailability,deleteProduct} from "./handlers/product"
+import {body,param} from "express-validator"
 import { handleInputErrors } from "./middleware"
 const router=Router()
 
 router.get("/",getProducts)
+
+router.get("/:id",
+    param("id").isInt().withMessage("Not valid id"),
+    handleInputErrors,
+    getProductById)
 
 router.post("/",
 
@@ -16,13 +21,24 @@ router.post("/",
                 handleInputErrors,  
     createProduct)
 
-router.put("/",(req,res)=>{
-    res.send("Desde PUT")
-})
-router.patch("/",(req,res)=>{
-    res.send("Desde PATCH")
-})
-router.delete("/",(req,res)=>{
-    res.send("Desde DELETE")
-})
+router.put("/:id",
+    param("id").isInt().withMessage("Not valid id"),
+    body("name").notEmpty().withMessage("name is empty"),
+    body("price")
+                .isNumeric().withMessage("incorrect value")
+                .notEmpty().withMessage("price is empty")
+                .custom(value=>value>0).withMessage("price should be greater than zero"), 
+    body("availability").isBoolean().withMessage("value not valid"),
+    handleInputErrors,
+    updatedProduct)
+router.patch("/:id",
+    param("id").isInt().withMessage("Not valid id"),
+    handleInputErrors,
+    updateAvailability)
+
+router.delete("/:id",
+    param("id").isInt().withMessage("Not valid id"),
+    handleInputErrors,
+    deleteProduct
+)
 export default router
