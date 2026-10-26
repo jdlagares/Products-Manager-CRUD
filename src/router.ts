@@ -83,6 +83,38 @@ router.get("/:id",
     handleInputErrors,
     getProductById)
 
+/**
+ * @swagger
+ * /api/products:
+ *      post:
+ *          summary: Creates a new product
+ *          tags: 
+ *              - Products
+ *          description: Return a new record in the database
+ *          requestBody: 
+ *              require: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              name:
+ *                                  type: string
+ *                                  example: "laptop gamimg"
+ *                              price: 
+ *                                  type: number
+ *                                  example: 399
+ *          responses:
+ *              201:
+ *                  description: Succesful response
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/Product"
+ *              400:
+ *                  description: Bad Request - invalid input data
+ *          
+ */
 router.post("/",
 
     body("name").notEmpty().withMessage("name is empty"),
@@ -92,7 +124,53 @@ router.post("/",
                 .custom(value=>value>0).withMessage("price should be greater than zero"),  
                 handleInputErrors,  
     createProduct)
-
+/**
+ * @swagger
+ * /api/products/{id}:
+ *      put:
+ *          summary: Updates a product with user input
+ *          tags:
+ *              - Products
+ *          description: Returns the updated product
+ *          parameters:
+ *            - in: path
+ *              name: id
+ *              description: The Id of the product to retrieve
+ *              required: true
+ *              schema:
+ *                  type: integer
+ *          requestBody: 
+ *              require: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              name:
+ *                                  type: string
+ *                                  example: "laptop gamimg"
+ *                              price: 
+ *                                  type: number
+ *                                  example: 399
+ *                              availability:
+ *                                  type: boolean  
+ *                                  example: true
+ *          responses:
+ *              200:
+ *                  description: Succesful response
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/Product"
+ *              400:
+ *                  description: Bad Request - Invalid Id or invalid input data
+ *              404:
+ *                  description: Product not Found
+ *                  
+ *          
+ *          
+ *          
+ */
 router.put("/:id",
     param("id").isInt().withMessage("Not valid id"),
     body("name").notEmpty().withMessage("name is empty"),
