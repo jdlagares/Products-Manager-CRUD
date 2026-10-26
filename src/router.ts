@@ -181,11 +181,68 @@ router.put("/:id",
     body("availability").isBoolean().withMessage("value not valid"),
     handleInputErrors,
     updatedProduct)
+/**
+ * @swagger
+ * /api/products/{id}:
+ *      patch:
+ *          summary: Update product availability
+ *          tags: 
+ *              - Products
+ *          description: returns the updated availability
+ *          parameters:
+ *            - in: path
+ *              name: id
+ *              description: The Id of the product to retrieve
+ *              required: true
+ *              schema:
+ *                  type: integer
+ *          responses:
+ *              200:
+ *                  description: Succesful response
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/Product"
+ *              400:
+ *                  description: Bad Request - Invalid Id
+ *              404:
+ *                  description: Product not Found
+ *              
+ *      
+ */
 router.patch("/:id",
     param("id").isInt().withMessage("Not valid id"),
     handleInputErrors,
     updateAvailability)
-
+/**
+ * @swagger
+ * /api/products/{id}:
+ *      delete:
+ *          summary: delete a product by id
+ *          tags:
+ *              - Products
+ *          description: return deleted product message
+ *          parameters:
+ *            - in: path
+ *              name: id
+ *              description: The Id of the product to delete
+ *              required: true
+ *              schema:
+ *                  type: integer
+ *          responses:
+ *              200:
+ *                  description: Succesful response
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              value: "producto eliminado"
+ *              400:
+ *                  description: Bad Request - Invalid Id
+ *              404:
+ *                  description: Product not Found
+ *      
+ */
 router.delete("/:id",
     param("id").isInt().withMessage("Not valid id"),
     handleInputErrors,
